@@ -1,0 +1,97 @@
+﻿
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>只读打开文件</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css"></link>
+    <!-- PageOffice.js文件一定要引用 -->
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="pageoffice.js" id="po_js_main"></script>
+    <script type="text/javascript">
+        //关闭窗口
+        function Close() {
+            POBrowser.closeWindow();
+            location.href = "index.jsp";
+        }
+    </script>
+</head>
+<body>
+    <!--header-->
+    <div class="zz-headBox clearfix">
+        <div class="zz-head mc">
+            <!--logo-->
+            <div class="logo fl">
+                <a href="#">
+                    <img src="/images/logo.png" alt="" />
+                </a>
+            </div>
+            <!--logo end-->
+            <ul class="head-rightUl fr">
+                <li>
+                    <a href="http://www.zhuozhengsoft.com" target="_blank">卓正网站</a>
+                </li>
+                <li>
+                    <a href="http://www.zhuozhengsoft.com/poask/index.asp" target="_blank">客户问吧</a>
+                </li>
+                <li class="bor-0">
+                    <a href="http://www.zhuozhengsoft.com/contact-us.html" target="_blank">联系我们</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--header end-->
+    <!--a title-->
+    <div class=" topTitle">
+        <ul>
+            <li class="pd-left">
+                <a href="javascript:Close();" style="color: White;">
+                    <font>返回文件列表</font>
+                </a>
+            </li>
+            <li>
+                <font>当前模式：</font>在线编辑
+            </li>
+            <li>
+                <font>当前系统日期：</font>@Html.Raw(ViewBag.time)
+            </li>
+        </ul>
+    </div>
+    <!--content-->
+    <div class="zz-content mc clearfix pd-28">
+        <form id="form1">
+          
+                <!-- *************************PageOffice组件的使用************************************ -->
+                <script type="text/javascript">
+
+                    function saveAs() {
+                        document.getElementById("PageOfficeCtrl1").ShowDialog(2);
+                    }
+                    function setPrint() {
+                        document.getElementById("PageOfficeCtrl1").ShowDialog(5);
+                    }
+                    function setFullScreen() {
+                        document.getElementById("PageOfficeCtrl1").FullScreen = !document.getElementById("PageOfficeCtrl1").FullScreen;
+                    }
+
+                </script>
+                <!-- *************************PageOffice组件的使用************************************ -->
+            <div style="width: auto;height: 700px;">
+                @Html.Raw(ViewBag.POCtrl)
+            </div>
+        </form>
+    </div>
+    <!--content end-->
+    <!--footer-->
+    <div class="login-footer clearfix">
+        Copyright copy 2013 北京卓正志远软件有限公司
+    </div>
+    <!--footer end-->
+</body>
+</html>

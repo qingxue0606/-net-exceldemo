@@ -17,9 +17,8 @@
     <title>在线演示示例</title>
 </head>
 <body>
-    <!--pageoffice.js和jquery.min.js一定要引用-->
-    <script type="text/javascript" src="pageoffice/js/jquery.min.js"></script>
-    <script type="text/javascript" src="pageoffice/js/pageoffice.js" id="po_js_main"></script>
+    <!--PageOffice.js一定要引用-->
+    <script type="text/javascript" src="~/PageOffice/pageoffice.js"></script>
     <script type="text/javascript">
         function onColor(td) {
             td.style.backgroundColor = '#D7FFEE';
@@ -56,13 +55,13 @@
         </div>
         <div class="demo mc">
             <h3 class="fs-12">新建文件</h3>
-            <form name="form1" id="form1" action="Default.aspx" method="post" runat="server">
+            <form name="form1" id="form1" action="Edit/create" method="get" >
                 <table class="text" cellSpacing="0" cellPadding="0" border="0">
                     <tr>
                         <td style="font-size:9pt" align="left">
                             <select name="TemplateName">
                                 <option value='redhead00.xls'>------不使用模板------</option>
-                                <option value='redhead01.xls' selected>公司销售情况月报模板</option>
+                                <option value='redhead01.xls' selected=selected>公司销售情况月报模板</option>
                             </select>
                         </td>
                         <td align="center"><input name="FileSubject" type="text" class="boder" style="width:180px;" value="请输入文档主题" /></td>
@@ -84,7 +83,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    @Html.Raw(ViewBag.strHtml)
                 </tbody>
             </table>
         </div>
