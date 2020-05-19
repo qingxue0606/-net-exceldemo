@@ -24,8 +24,8 @@ namespace worddemo.Controllers
         {
             _logger = logger;
             _webHostEnvironment = webHostEnvironment;
-            string dataPath = _webHostEnvironment.WebRootPath.Replace("/", "\\");
-            dataPath = dataPath.Substring(0, dataPath.Length - 7) + "appData\\" + "exceldemo.db";
+            string rootPath = _webHostEnvironment.WebRootPath.Replace("/", "\\");
+            string dataPath = rootPath.Substring(0, rootPath.Length - 7) + "appData\\" + "exceldemo.db";
             connString = "Data Source=" + dataPath;
         }
 
@@ -34,14 +34,11 @@ namespace worddemo.Controllers
 
             string sql = "select * from  excel order by  ID  DESC ";
             SqliteConnection conn = new SqliteConnection(connString);
-
             conn.Open();
             SqliteCommand cmd = new SqliteCommand(sql, conn);
             cmd.ExecuteNonQuery();
-            cmd.CommandText = sql;
             SqliteDataReader dr = cmd.ExecuteReader();
             StringBuilder strGrid = new StringBuilder();
-
             if (!dr.HasRows)
             {
                 strGrid.Append("<tr >\r\n");
@@ -50,7 +47,6 @@ namespace worddemo.Controllers
             }
             else
             {
-
                 while (dr.Read())
                 {
                     strGrid.Append("<tr  onmouseover='onColor(this)' onmouseout='offColor(this)' >\r\n");
@@ -67,7 +63,6 @@ namespace worddemo.Controllers
             }
             dr.Close();
             conn.Close();
-
             ViewBag.strHtml = strGrid;
             return View();
         }

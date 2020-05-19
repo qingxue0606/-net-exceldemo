@@ -18,8 +18,8 @@ namespace exceldemo.Controllers.Edit
         public EditController(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
-            string dataPath = _webHostEnvironment.WebRootPath.Replace("/", "\\");
-            dataPath = dataPath.Substring(0, dataPath.Length - 7) + "appData\\" + "exceldemo.db";
+            string rootPath = _webHostEnvironment.WebRootPath.Replace("/", "\\");
+            string dataPath = rootPath.Substring(0, rootPath.Length - 7) + "appData\\" + "exceldemo.db";
             connString = "Data Source=" + dataPath;
         }
 
@@ -29,7 +29,6 @@ namespace exceldemo.Controllers.Edit
             string DocID = Request.Query["ID"];
             string sql = "select * from excel where ID = " + DocID + ";";
             SqliteConnection conn = new SqliteConnection(connString);
-            String lz = "张三批阅";//流转
             conn.Open();
             SqliteCommand cmd = new SqliteCommand(sql, conn);
             cmd.ExecuteNonQuery();
@@ -39,13 +38,12 @@ namespace exceldemo.Controllers.Edit
             PageOfficeNetCore.PageOfficeCtrl pageofficeCtrl = new PageOfficeNetCore.PageOfficeCtrl(Request);
             pageofficeCtrl.ServerPage = "../PageOffice/POServer";
             string docFile = "";
-            string docSubject = "";
             while (dr.Read())
             {
                 docFile = dr["FileName"].ToString();
-                docSubject = dr["Subject"].ToString();
             }
-
+            dr.Close();
+            conn.Close();
             //设置保存页面
             pageofficeCtrl.SaveFilePage = "/Edit/SaveDoc";
 
@@ -71,13 +69,11 @@ namespace exceldemo.Controllers.Edit
 
         }
 
-
         public IActionResult excel2()
         {
             string DocID = Request.Query["ID"];
             string sql = "select * from excel where ID = " + DocID + ";";
             SqliteConnection conn = new SqliteConnection(connString);
-            String lz = "张三批阅";//流转
             conn.Open();
             SqliteCommand cmd = new SqliteCommand(sql, conn);
             cmd.ExecuteNonQuery();
@@ -93,7 +89,8 @@ namespace exceldemo.Controllers.Edit
                 docFile = dr["FileName"].ToString();
                 docSubject = dr["Subject"].ToString();
             }
-
+            dr.Close();
+            conn.Close();
             //设置保存页面
             pageofficeCtrl.SaveFilePage = "/Edit/SaveDoc";
             PageOfficeNetCore.ExcelWriter.Workbook wb = new PageOfficeNetCore.ExcelWriter.Workbook();
@@ -113,7 +110,6 @@ namespace exceldemo.Controllers.Edit
 
         }
 
-
         public async Task<ActionResult> SaveDoc()
         {
             PageOfficeNetCore.FileSaver fs = new PageOfficeNetCore.FileSaver(Request, Response);
@@ -124,7 +120,6 @@ namespace exceldemo.Controllers.Edit
             return Content("OK");
         }
 
-
         public IActionResult create()
         {
 
@@ -132,10 +127,8 @@ namespace exceldemo.Controllers.Edit
             conn.Open();
             string sql = "select Max(ID) from excel";
             SqliteCommand cmd = new SqliteCommand(sql, conn);
-
             cmd.CommandType = CommandType.Text;
             cmd.ExecuteNonQuery();
-
             cmd.CommandText = sql;
             SqliteDataReader dr = cmd.ExecuteReader();
             string newID = "1";
@@ -145,19 +138,19 @@ namespace exceldemo.Controllers.Edit
                 newID = (int.Parse(dr[0].ToString()) + 1).ToString();
             }
             dr.Close();
-
             string fileName = "bbcc" + newID + ".xls";
 
             string FileSubject = "请输入文档主题";
             if (Request.Query["FileSubject"] != "") FileSubject = Request.Query["FileSubject"];
 
-            String strsql = "Insert into excel(ID,FileName,Subject,SubmitTime) values(" + newID
+            string strsql = "Insert into excel(ID,FileName,Subject,SubmitTime) values(" + newID
                 + ",'" + fileName + "','" + FileSubject + "','" + DateTime.Now.ToString() + "')";
 
             SqliteCommand cmd2 = new SqliteCommand(strsql, conn);
 
             cmd2.CommandType = CommandType.Text;
             cmd2.ExecuteNonQuery();
+            conn.Close();
             // 复制服务器端的模板文件命名为新的文件名
             string webRootPath = _webHostEnvironment.WebRootPath;
             System.IO.File.Copy(webRootPath + "\\doc\\" + Request.Query["TemplateName"],
